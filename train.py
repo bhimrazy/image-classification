@@ -63,6 +63,10 @@ def main() -> None:
         "test_acc": [],
     }
 
+    # Tensorboard writer
+    run_name = datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
+    writer = SummaryWriter(os.path.join(runs_dir, run_name))
+
     for epoch in tqdm(range(args.epochs), desc="Epochs", unit="epoch"):
         train_loss, train_acc = train_eval_step(
             model,
@@ -88,6 +92,11 @@ def main() -> None:
         results["test_loss"].append(test_loss)
         results["test_acc"].append(test_acc)
 
+        writer.add_scalar('Loss/train', train_loss, epoch)
+        writer.add_scalar('Loss/test', test_loss, epoch)
+        writer.add_scalar('Accuracy/train', train_acc, epoch)
+        writer.add_scalar('Accuracy/test', test_acc, epoch)
+
         print(
             f"Epoch: {epoch + 1} | "
             f"Train Loss: {train_loss:.3f} | "
@@ -100,14 +109,6 @@ def main() -> None:
         torch.save(model.state_dict(), "model.pth")
 
     plot_results(results)
-
-    # Tensorboard
-    run_name = datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
-    writer = SummaryWriter(os.path.join(runs_dir, run_name))
-
-    # log results
-    writer.add_scalars('loss', {'train': results["train_loss"], 'test': results["test_loss"]}, 0)
-    writer.add_scalars('accuracy', {'train': results["train_acc"], 'test': results["test_acc"]}, 0)
 
     # log model
     writer.add_graph(model, train_loader.dataset[0][0].unsqueeze(0).to(device))
@@ -123,7 +124,8 @@ def main() -> None:
         {'hparam/accuracy': results["test_acc"][-1], 'hparam/loss': results["test_loss"][-1]}
     )
 
-    # close writer
+    # flush and close writer
+    writer.flush()
     writer.close()
 
 
