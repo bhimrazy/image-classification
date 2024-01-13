@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+import numpy as np
 import torch
 import torchvision
 from torch.utils.tensorboard import SummaryWriter
@@ -12,9 +13,8 @@ from src.parser import parse_args
 from src.utils import get_device, seed_everything, train_eval_step
 from src.viz import plot_results
 
-runs_dir = 'runs'
+runs_dir = "runs"
 os.makedirs(runs_dir, exist_ok=True)
-
 
 
 def main() -> None:
@@ -68,8 +68,12 @@ def main() -> None:
     writer = SummaryWriter(os.path.join(runs_dir, run_name))
 
     # add dataset labels histogram to tensorboard
-    writer.add_histogram('train data distribution', train_loader.dataset.image_labels, 0)
-    writer.add_histogram('test data distribution', test_loader.dataset.image_labels, 0)
+    writer.add_histogram(
+        "train data distribution", np.array(train_loader.dataset.image_labels), 0
+    )
+    writer.add_histogram(
+        "test data distribution", np.array(test_loader.dataset.image_labels), 0
+    )
 
     for epoch in tqdm(range(args.epochs), desc="Epochs", unit="epoch"):
         train_loss, train_acc = train_eval_step(
@@ -96,10 +100,10 @@ def main() -> None:
         results["test_loss"].append(test_loss)
         results["test_acc"].append(test_acc)
 
-        writer.add_scalar('Loss/train', train_loss, epoch)
-        writer.add_scalar('Loss/test', test_loss, epoch)
-        writer.add_scalar('Accuracy/train', train_acc, epoch)
-        writer.add_scalar('Accuracy/test', test_acc, epoch)
+        writer.add_scalar("Loss/train", train_loss, epoch)
+        writer.add_scalar("Loss/test", test_loss, epoch)
+        writer.add_scalar("Accuracy/train", train_acc, epoch)
+        writer.add_scalar("Accuracy/test", test_acc, epoch)
 
         print(
             f"Epoch: {epoch + 1} | "
@@ -117,21 +121,20 @@ def main() -> None:
     # log images
     images, labels = next(iter(train_loader))
     grid = torchvision.utils.make_grid(images)
-    writer.add_image('images', grid, 0)
+    writer.add_image("images", grid, 0)
 
     # log model
     writer.add_graph(model, images.to(device))
 
     # log hyperparameters
     writer.add_hparams(
-        {'lr': args.lr, 'batch_size': args.batch_size, 'epochs': args.epochs},
-        {'test_acc': results["test_acc"][-1], 'test_loss': results["test_loss"][-1]}
+        {"lr": args.lr, "batch_size": args.batch_size, "epochs": args.epochs},
+        {"test_acc": results["test_acc"][-1], "test_loss": results["test_loss"][-1]},
     )
 
     # flush and close writer
     writer.flush()
     writer.close()
-
 
 
 if __name__ == "__main__":
