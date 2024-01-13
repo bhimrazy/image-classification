@@ -96,7 +96,6 @@ def train_eval_step(
         labels = labels.to(device)
 
         optimizer.zero_grad()
-
         with torch.set_grad_enabled(train_mode):
             outputs = model(images)
             loss = criterion(outputs, labels)
