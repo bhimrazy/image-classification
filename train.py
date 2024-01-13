@@ -67,6 +67,10 @@ def main() -> None:
     run_name = datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
     writer = SummaryWriter(os.path.join(runs_dir, run_name))
 
+    # add dataset labels histogram to tensorboard
+    writer.add_histogram('train data distribution', train_loader.dataset.image_labels, 0)
+    writer.add_histogram('test data distribution', test_loader.dataset.image_labels, 0)
+
     for epoch in tqdm(range(args.epochs), desc="Epochs", unit="epoch"):
         train_loss, train_acc = train_eval_step(
             model,
