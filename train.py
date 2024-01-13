@@ -27,11 +27,13 @@ def main() -> None:
         args.train_csv_path,
         args.batch_size,
         train_mode=True,
+        num_workers=args.num_workers,
     )
     test_loader = create_data_loader(
         args.test_csv_path,
         args.batch_size,
         train_mode=False,
+        num_workers=args.num_workers,
     )
 
     num_classes = len(set(train_loader.dataset.image_labels))
