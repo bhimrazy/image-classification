@@ -110,13 +110,13 @@ def main() -> None:
 
     plot_results(results)
 
-    # log model
-    writer.add_graph(model, train_loader.dataset[0][0].unsqueeze(0).to(device))
-
     # log images
     images, labels = next(iter(train_loader))
     grid = torchvision.utils.make_grid(images)
     writer.add_image('images', grid, 0)
+
+    # log model
+    writer.add_graph(model, images)
 
     # log hyperparameters
     writer.add_hparams(
