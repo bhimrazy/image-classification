@@ -108,7 +108,7 @@ def train_eval_step(
         epoch_loss += loss.cpu().item() * images.size(0)
         epoch_corrects += torch.sum(preds == labels.data).cpu().item()
 
-        if i % log_interval == 0:
+        if i % log_interval == 0 and log_interval < len(data_loader):
             print(
                 f"Batch {i}/{len(data_loader)} - "
                 f"{'Train' if train_mode else 'Test'} Loss: {loss.item():.4f}"
