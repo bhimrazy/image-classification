@@ -116,12 +116,12 @@ def main() -> None:
     writer.add_image('images', grid, 0)
 
     # log model
-    writer.add_graph(model, images)
+    writer.add_graph(model, images.to(device))
 
     # log hyperparameters
     writer.add_hparams(
         {'lr': args.lr, 'batch_size': args.batch_size, 'epochs': args.epochs},
-        {'hparam/accuracy': results["test_acc"][-1], 'hparam/loss': results["test_loss"][-1]}
+        {'test_acc': results["test_acc"][-1], 'test_loss': results["test_loss"][-1]}
     )
 
     # flush and close writer
