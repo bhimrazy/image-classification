@@ -9,7 +9,7 @@ def create_data_loader(
     csv_path: str,
     batch_size: int,
     pin_memory: bool = True,
-    num_workers: int = 2,
+    num_workers: int = 4,
     train_mode: bool = True,
 ) -> DataLoader:
     """
@@ -34,4 +34,5 @@ def create_data_loader(
         pin_memory=pin_memory,
         num_workers=num_workers,
         shuffle=train_mode,
+        drop_last=train_mode,
     )
