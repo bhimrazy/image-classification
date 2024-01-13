@@ -68,12 +68,12 @@ def main() -> None:
     writer = SummaryWriter(os.path.join(runs_dir, run_name))
 
     # add dataset labels histogram to tensorboard
-    writer.add_histogram(
-        "train data distribution", np.array(train_loader.dataset.image_labels), 0
-    )
-    writer.add_histogram(
-        "test data distribution", np.array(test_loader.dataset.image_labels), 0
-    )
+    # writer.add_histogram(
+    #     "train data distribution", np.array(train_loader.dataset.image_labels), 0
+    # )
+    # writer.add_histogram(
+    #     "test data distribution", np.array(test_loader.dataset.image_labels), 0
+    # )
 
     for epoch in tqdm(range(args.epochs), desc="Epochs", unit="epoch"):
         train_loss, train_acc = train_eval_step(
