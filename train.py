@@ -34,11 +34,14 @@ def main() -> None:
         train_mode=False,
     )
 
+    num_classes = len(set(train_loader.dataset.image_labels))
+    print(f"Number of classes: {num_classes}")
+
     print("Training...")
 
     criterion = torch.nn.CrossEntropyLoss().to(device)
 
-    model = DenseNetModel(num_classes=5).to(device)
+    model = DenseNetModel(num_classes=num_classes).to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
