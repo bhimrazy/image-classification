@@ -59,4 +59,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Whether to save the model.",
     )
+    parser.add_argument(
+        "--num-workers",
+        type=int,
+        default=2,
+        help="The number of workers.",
+    )
     return parser.parse_args()
