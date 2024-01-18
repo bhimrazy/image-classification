@@ -62,3 +62,21 @@ class ImageDataset(Dataset):
             return image, st_image, label
 
         return image, label
+
+
+if __name__ == "__main__":
+    from src.utils import load_data
+    from src.transforms import test_transform
+
+    csv_path = "data/flowers/test.csv"
+    images, labels = load_data(csv_path)
+
+    dataset = ImageDataset(
+        images,
+        labels,
+        transform=test_transform,
+        is_ulb=True,
+        strong_transform=test_transform,
+    )
+
+    print(len(dataset[0]))
