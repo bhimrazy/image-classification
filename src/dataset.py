@@ -10,6 +10,7 @@ class ImageDataset(Dataset):
         image_paths: List[str],
         image_labels: List[int],
         transform: transforms.Compose = None,
+        label_transform=None,
         is_ulb: bool = False,
         strong_transform: transforms.Compose = None,
     ):
@@ -26,6 +27,7 @@ class ImageDataset(Dataset):
         self.image_paths = image_paths
         self.image_labels = image_labels
         self.transform = transform
+        self.label_transform = label_transform
         self.is_ulb = is_ulb
         self.strong_transform = strong_transform
 
@@ -47,6 +49,9 @@ class ImageDataset(Dataset):
         """
         image = Image.open(self.image_paths[idx]).convert("RGB")
         label = self.image_labels[idx]
+
+        if self.label_transform is not None:
+            label = self.label_transform(label)
 
         if self.transform is not None:
             image = self.transform(image)
