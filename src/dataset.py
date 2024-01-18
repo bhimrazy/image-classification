@@ -45,14 +45,15 @@ class ImageDataset(Dataset):
             Union[Tuple[Image.Image, int], Tuple[Image.Image, Image.Image, int]]:
             Tuple containing image and label or image, strong-transformed image, and label.
         """
-        img = Image.open(self.image_paths[idx]).convert("RGB")
+        image = Image.open(self.image_paths[idx]).convert("RGB")
         label = self.image_labels[idx]
 
         if self.transform is not None:
-            image = self.transform(img)
+            image = self.transform(image)
 
         if self.is_ulb and self.strong_transform is not None:
-            st_image = self.strong_transform(img)
+            st_image = Image.open(self.image_paths[idx]).convert("RGB")
+            st_image = self.strong_transform(st_image)
             return image, st_image, label
 
         return image, label
